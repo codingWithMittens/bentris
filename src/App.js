@@ -2,25 +2,30 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 
 
-const rows = 10;
+const rows = 15;
 const cols = 10;
+let completedLinesInLevel = 0;
+let totalCompletedLines = 0;
 let speed = 2;
 
 const App = () => {
 
   const handleKeyDown = (event) => {
-    if (event.keyCode === 37) { //left arrow key
-      move(-1)
+    if (event.keyCode === 37) {
+      move(-1);
     }
-    if (event.keyCode === 38) { //up arrow key
-      rotateActiveTetrino()
+    if (event.keyCode === 38) {
+      rotateActiveTetrominoe();
     }
-    if (event.keyCode === 39) { //right arrow key
-      move(1)
+    if (event.keyCode === 39) {
+      move(1);
     }
-    if (event.keyCode === 40) { //down arrow key
-      fall()
+    if (event.keyCode === 40) {
+      fall();
     }
+    // if (event.keyCode === 49) {
+    //   hardFall();
+    // }
   }
 
   useEffect(() => {
@@ -33,47 +38,46 @@ const App = () => {
 
   // useEffect(() => {
   //   const intervalId = setInterval(() => {
-  //     fall()
+  //     console.log('falling', activeTetrominoe);
+  //     fall();
   //   }, speed * 1000);
 
   //   return () => clearInterval(intervalId);
-  // }, []);
+  // }, ['']);
 
-  const tetrinos = [
-    {name: 'I', boundary: 4, shape: [[[1,0],[1,1],[1,2],[1,3]], [[0,2],[1,2],[2,2],[3,2]], [[2,0],[2,1],[2,2],[2,3]], [[0,1],[1,1],[2,1],[3,1]]], color: 'cyan'},
-    {name: 'J', boundary: 3, shape: [[[0,0],[1,0],[1,1],[1,2]], [[0,1],[0,2],[1,1],[2,1]], [[1,0],[1,1],[1,2],[2,2]], [[2,0],[2,1],[1,1],[0,1]]], color: 'blue'},
-    {name: 'L', boundary: 3, shape: [[[0,2],[1,0],[1,1],[1,2]], [[0,1],[2,2],[1,1],[2,1]], [[1,0],[1,1],[1,2],[2,0]], [[0,0],[2,1],[1,1],[0,1]]], color: 'orange'},
-    {name: 'O', boundary: 2, shape: [[[0,0],[0,1],[1,0],[1,1]]], color: 'yellow'},
-    {name: 'S', boundary: 3, shape: [[[1,0],[1,1],[0,1],[0,2]], [[0,1],[1,1],[1,2],[2,2]], [[2,0],[2,1],[1,1],[1,2]], [[0,0],[1,0],[1,1],[2,1]]], color: 'green'},
-    {name: 'T', boundary: 3, shape: [[[0,1],[1,0],[1,1],[1,2]], [[0,1],[1,1],[1,2],[2,1]], [[1,0],[1,1],[1,2],[2,1]], [[0,1],[1,1],[1,0],[2,1]]], color: 'purple'},
-    {name: 'Z', boundary: 3, shape: [[[0,0],[1,0],[1,1],[1,2]], [[0,2],[1,2],[1,1],[2,1]], [[1,0],[1,1],[2,1],[2,2]], [[0,1],[1,1],[1,0],[2,0]]], color: 'red'},
+  const tetrominoes = [
+    {name: 'I', shape: [[[1,0],[1,1],[1,2],[1,3]], [[0,2],[1,2],[2,2],[3,2]], [[2,0],[2,1],[2,2],[2,3]], [[0,1],[1,1],[2,1],[3,1]]], color: 'cyan'},
+    {name: 'J', shape: [[[0,0],[1,0],[1,1],[1,2]], [[0,1],[0,2],[1,1],[2,1]], [[1,0],[1,1],[1,2],[2,2]], [[2,0],[2,1],[1,1],[0,1]]], color: 'blue'},
+    {name: 'L', shape: [[[0,2],[1,0],[1,1],[1,2]], [[0,1],[2,2],[1,1],[2,1]], [[1,0],[1,1],[1,2],[2,0]], [[0,0],[2,1],[1,1],[0,1]]], color: 'orange'},
+    {name: 'O', shape: [[[0,0],[0,1],[1,0],[1,1]]], color: 'yellow'},
+    {name: 'S', shape: [[[1,0],[1,1],[0,1],[0,2]], [[0,1],[1,1],[1,2],[2,2]], [[2,0],[2,1],[1,1],[1,2]], [[0,0],[1,0],[1,1],[2,1]]], color: 'green'},
+    {name: 'T', shape: [[[0,1],[1,0],[1,1],[1,2]], [[0,1],[1,1],[1,2],[2,1]], [[1,0],[1,1],[1,2],[2,1]], [[0,1],[1,1],[1,0],[2,1]]], color: 'purple'},
+    {name: 'Z', shape: [[[0,0],[0,1],[1,1],[1,2]], [[0,2],[1,2],[1,1],[2,1]], [[1,0],[1,1],[2,1],[2,2]], [[0,1],[1,1],[1,0],[2,0]]], color: 'red'},
   ];
 
-  const initTetrino = () => ({
+  const initTetrominoe = () => ({
     rotation: 0,
     row: 0,
     col: Math.max(cols / 2) - 2,
-    tetrino: tetrinos[Math.floor(Math.random() * tetrinos.length)],
+    tetrominoe: tetrominoes[Math.floor(Math.random() * tetrominoes.length)],
   })
 
-  const initInactiveTetrinos = []
+  const initPlacedTetrominoes = [];
   for(let i = 0; i < rows; i++) {
-    const row = [];
-    for(let i = 0; i < cols; i++) {
-      row[i] = { color: ''};
-    }
-    initInactiveTetrinos[i] = row;
+    initPlacedTetrominoes.push(Array(cols).fill(''));
   }
 
-  const [activeTetrino, setActiveTetrino] = useState({...initTetrino()});
-  const [inactiveTetrinos, setInactiveTetrinos] = useState(initInactiveTetrinos);
+  const [activeTetrominoe, setActiveTetrominoe] = useState({...initTetrominoe()});
+  const [placedTetrominoes, setPlacedTetrominoes] = useState(initPlacedTetrominoes);
+  const [score, setScore] = useState(0);
+  const [level, setLevel] = useState(1);
 
   const board = Array(rows).fill(Array(cols).fill())
 
-  const updateActiveTetrinoAttr = (attr, newValue) => {
-    const proposedPos = {...activeTetrino, [attr]: newValue}
+  const updateActiveTetrominoeAttr = (attr, newValue) => {
+    const proposedPos = {...activeTetrominoe, [attr]: newValue}
     if (isValid(proposedPos.row, proposedPos.col, proposedPos.rotation)) {
-      setActiveTetrino({...activeTetrino, [attr]: newValue});
+      setActiveTetrominoe({...activeTetrominoe, [attr]: newValue});
       return true;
     } else {
       console.log('out of bounds')
@@ -81,72 +85,95 @@ const App = () => {
     }
   }
 
-  const rotateActiveTetrino = () => {
-    console.log('rotating', activeTetrino)
-    updateActiveTetrinoAttr('rotation', (activeTetrino.rotation + 1) % activeTetrino.tetrino.shape.length)
+  const rotateActiveTetrominoe = () => {
+    console.log('rotating', activeTetrominoe)
+    updateActiveTetrominoeAttr('rotation', (activeTetrominoe.rotation + 1) % activeTetrominoe.tetrominoe.shape.length)
   };
 
   const spawn = () => {
-    setActiveTetrino({...initTetrino()});
+    setActiveTetrominoe({...initTetrominoe()});
   };
 
   const move = (amount) => {
-    console.log('moving', activeTetrino)
-    updateActiveTetrinoAttr('col', activeTetrino.col + amount)
+    console.log('moving', activeTetrominoe)
+    updateActiveTetrominoeAttr('col', activeTetrominoe.col + amount)
   };
 
   const applyToBoard = () => {
-    const newTetrinoMap = [...inactiveTetrinos]
+    const newTetrominoeMap = [...placedTetrominoes]
 
-    tetrinoLocations(activeTetrino.row, activeTetrino.col, activeTetrino.rotation).forEach(blockPos => {
+    tetrominoeLocations(activeTetrominoe.row, activeTetrominoe.col, activeTetrominoe.rotation).forEach(blockPos => {
       const [row, col] = blockPos;
 
-      newTetrinoMap[row][col] = {color: activeTetrino.tetrino.color};
+      newTetrominoeMap[row][col] = activeTetrominoe.tetrominoe.color;
     })
-    console.log(newTetrinoMap);
-    setInactiveTetrinos(newTetrinoMap);
+    console.log(newTetrominoeMap);
+    setPlacedTetrominoes(newTetrominoeMap);
+    updateLevelAndScore(removeCompleteRows());
+  }
+
+  const updateLevelAndScore = (rowsRemoved) => {
+    totalCompletedLines += rowsRemoved;
+    completedLinesInLevel += rowsRemoved;
+    const newScore = [0,100,300,500,800][rowsRemoved] * level;
+    console.log(rowsRemoved, newScore);
+    setScore(score + newScore);
+    if(completedLinesInLevel >= level * 10) {
+      setLevel(level + 1);
+      completedLinesInLevel = 0;
+    }
   }
 
   const fall = () => {
-    // console.log('activeTetrino', activeTetrino)
-    const newRow = activeTetrino.row + 1;
-    if (!updateActiveTetrinoAttr('row', newRow)) {
+    const newRow = activeTetrominoe.row + 1;
+    if (!updateActiveTetrominoeAttr('row', newRow)) {
       applyToBoard()
       spawn();
     }
   };
 
-  const tetrinoLocations = (atRow, atCol, atRotation) => {
-    return activeTetrino.tetrino.shape[atRotation].map(rowPos => {
+  const tetrominoeLocations = (atRow, atCol, atRotation) => {
+    return activeTetrominoe.tetrominoe.shape[atRotation].map(rowPos => {
       const [row, col] = rowPos
       return([atRow + row, atCol + col])
     })
   }
 
-  const isValid = (row, col, rotation) => {
-    const proposedLocation = tetrinoLocations(row, col, rotation)
-    console.log(proposedLocation, rows)
-    const insideLeftBoundary = proposedLocation.every(coords => coords[1] >= 0);
-    const insideRightBoundary = proposedLocation.every(coords => coords[1] < cols);
-    const aboveFloor = proposedLocation.every(coords => coords[0] < rows);
+  const isValid = (row, col, rotation) => (
+    tetrominoeLocations(row, col, rotation).every(coords => {
+      [row, col] = coords;
+      const insideLeftBoundary = col >= 0;
+      const insideRightBoundary = col < cols;
+      const aboveFloor = row < rows;
+      const noConflicts = aboveFloor && placedTetrominoes[coords[0]][coords[1]] === ''
 
-    return insideLeftBoundary && insideRightBoundary && aboveFloor;
+      return insideLeftBoundary && insideRightBoundary && aboveFloor && noConflicts;
+    })
+  );
+
+
+  const removeCompleteRows = () => {
+    const incompleteRows = placedTetrominoes.filter(row => row.some(col => col === ''));
+    const removedRows =  rows - incompleteRows.length;
+
+    while(incompleteRows.length < rows) { incompleteRows.unshift(Array(cols).fill('')) }
+
+    setPlacedTetrominoes(incompleteRows);
+    return removedRows;
   };
 
-
-  // const isRowComplete = () => {};
-
-
-
   const cellColor = (row, col) => {
-    const staticColors =  inactiveTetrinos[row][col].color;
+    const staticColors =  placedTetrominoes[row][col];
     // hack - fix this
-    const tetrinoPosition = tetrinoLocations(activeTetrino.row, activeTetrino.col, activeTetrino.rotation).map(coords => coords.join(',')).includes([row, col].join(','));
-    return tetrinoPosition ? activeTetrino.tetrino.color : staticColors;
+    const tetrominoePosition = tetrominoeLocations(activeTetrominoe.row, activeTetrominoe.col, activeTetrominoe.rotation).map(coords => coords.join(',')).includes([row, col].join(','));
+    return tetrominoePosition ? activeTetrominoe.tetrominoe.color : staticColors;
   }
 
   return (
     <div className="App">
+      <div className="score">Score: {score}</div>
+      <div className="level">Level: {level}</div>
+      <div className="board">
       {
         board.map((row, rowi) => {
           return (
@@ -163,6 +190,7 @@ const App = () => {
           )
         })
       }
+      </div>
     </div>
   );
 }
