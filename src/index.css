@@ -7,20 +7,40 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.score, .level {
+  color: red;
+  font-size: 40px;
+}
+
+.board {
+  display: flex;
+  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .row {
   display: flex;
 }
 
 .col {
-  width: 50px;
-  height: 50px;
-  border: 1px solid #e5e5e5;
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  margin: 1px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
 }
 
-.cyan { background-color: cyan }
-.blue { background-color: blue }
+.occupied {
+  border-radius: 8px;
+}
+
+.cyan { background-color: #2D3092 }
+.blue { background-color: #5FB6EA }
 .orange { background-color: orange }
-.yellow { background-color: yellow }
-.green { background-color: green }
-.purple { background-color: purple }
+.yellow { background-color: #8AC53E }
+.green { background-color: #F5BC5B }
+.purple { background-color: #EC6C6C }
 .red { background-color: red }
