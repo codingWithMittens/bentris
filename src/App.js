@@ -48,11 +48,16 @@ const App = () => {
     {name: 'Z', shape: [[[0,0],[0,1],[1,1],[1,2]], [[0,2],[1,2],[1,1],[2,1]], [[1,0],[1,1],[2,1],[2,2]], [[0,1],[1,1],[1,0],[2,0]]], color: 'red'},
   ];
 
+  const newTetrominoeQueue = () => [...tetrominoes].sort( () => .5 - Math.random() );
+  const [tetrominoeQueue, setTetrominoeQueue] = useState(newTetrominoeQueue)
+
   const initTetrominoe = () => ({
     rotation: 0,
     row: 0,
     col: Math.max(cols / 2) - 2,
+    // log: console.log('queue', tetrominoeQueue),
     tetrominoe: tetrominoes[Math.floor(Math.random() * tetrominoes.length)],
+    // tetrominoe: tetrominoeQueue.pop(),
   })
 
   const initPlacedTetrominoes = [];
@@ -62,12 +67,18 @@ const App = () => {
 
   const [activeTetrominoe, setActiveTetrominoe] = useState({...initTetrominoe()});
   const [placedTetrominoes, setPlacedTetrominoes] = useState(initPlacedTetrominoes);
-  const [speed, setSpeed] = useState(2);
+  const [speed, setSpeed] = useState(1);
   const [score, setScore] = useState(0);
-  const [level, setLevel] = useState(1);
+  const [level, setLevel] = useState(.4);
   const [active, setActive] = useState(false);
 
   const board = Array(rows).fill(Array(cols).fill())
+
+  // useEffect(() => {
+
+  //   spawn()
+  // }, []);
+
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -83,7 +94,6 @@ const App = () => {
       setActiveTetrominoe({...activeTetrominoe, [attr]: newValue});
       return true;
     } else {
-      console.log('out of bounds')
       return false;
     }
   };
@@ -94,6 +104,8 @@ const App = () => {
 
   const spawn = () => {
     const newTetrominoe = {...initTetrominoe()}
+    // const newTetrominoe = {...tetrominoeQueue.pop()}
+    // console.log('spawning')
     setActiveTetrominoe(newTetrominoe);
   };
 
@@ -116,9 +128,9 @@ const App = () => {
   const updateLevelAndScore = (rowsRemoved) => {
     totalCompletedLines += rowsRemoved;
     completedLinesInLevel += rowsRemoved;
-    const newScore = [0,100,300,500,800][rowsRemoved] * level;
+    const newScore = [0, 100, 300, 500, 800][rowsRemoved] * level;
     setScore(score + newScore);
-    if(completedLinesInLevel >= level * 2) {
+    if(completedLinesInLevel >= level * 10) {
       setLevel(level + 1);
       completedLinesInLevel = 0;
       setSpeed(speed * .7)
@@ -143,7 +155,6 @@ const App = () => {
     let i = activeTetrominoe.row + 1;
 
     for(i; i < rows; i++) {
-      console.log('checking row', i);
       if (!isValid({...activeTetrominoe, row: i})) { break }
     };
 
@@ -152,6 +163,7 @@ const App = () => {
 
   const tetrominoeLocations = (attrs) => {
     const {row, col, rotation} = attrs;
+    // if(!activeTetrominoe.tetrominoe) {setActiveTetrominoe({...initTetrominoe()})}
     return activeTetrominoe.tetrominoe.shape[rotation]?.map(coords => [coords[0] + row, coords[1] + col]) || [];
   };
 
@@ -188,8 +200,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <div className="score">Score: {score}</div>
-      <div className="level">Level: {level}</div>
       <div className="board">
       {
         board.map((row, rowi) => {
@@ -204,6 +214,11 @@ const App = () => {
           )
         })
       }
+      </div>
+      <div className="info">
+        <p className="score"><span className="label">Score</span><span className="label">{score}</span></p>
+        <p className="level"><span className="label">Level</span><span className="label">{level}</span></p>
+        <p className="linesRemaining"><span className="label">Next level</span><span className="label">{(level * 10) - completedLinesInLevel}</span></p>
       </div>
     </div>
   );
