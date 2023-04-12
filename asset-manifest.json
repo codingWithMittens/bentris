@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/bentris/static/css/main.9ff527ae.css",
-    "main.js": "/bentris/static/js/main.f1fd3cb0.js",
+    "main.css": "/bentris/static/css/main.b1789acc.css",
+    "main.js": "/bentris/static/js/main.e23f2fb7.js",
     "static/js/787.0ef42b96.chunk.js": "/bentris/static/js/787.0ef42b96.chunk.js",
     "index.html": "/bentris/index.html",
-    "main.9ff527ae.css.map": "/bentris/static/css/main.9ff527ae.css.map",
-    "main.f1fd3cb0.js.map": "/bentris/static/js/main.f1fd3cb0.js.map",
+    "main.b1789acc.css.map": "/bentris/static/css/main.b1789acc.css.map",
+    "main.e23f2fb7.js.map": "/bentris/static/js/main.e23f2fb7.js.map",
     "787.0ef42b96.chunk.js.map": "/bentris/static/js/787.0ef42b96.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9ff527ae.css",
-    "static/js/main.f1fd3cb0.js"
+    "static/css/main.b1789acc.css",
+    "static/js/main.e23f2fb7.js"
   ]
 }
