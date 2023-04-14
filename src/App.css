@@ -7,24 +7,26 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* position: fixed; */
+  overscroll-behavior: contain;
 }
 
 .App {
-  text-align: center;
   display: flex;
-  padding-top: 20px;
+  justify-content: center;
+  padding: 20px;
 }
 
 .info {
   background-color: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
+  margin-left: 30px;
   padding: 10px;
   width: 200px;
-  margin: 0 auto;
 }
 
 .info p {
-  color: #FF6000;
+  /* color: #FF6000; */
   font-size: 20px;
   margin: 5px;
   display: flex;
@@ -34,10 +36,10 @@ body {
 
 .board {
   display: flex;
-  margin: 0 auto;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-right: 30px;
 }
 
 .row {
@@ -47,6 +49,7 @@ body {
 .col {
   width: 40px;
   height: 40px;
+  /* padding-bottom: 10%; */
   box-sizing: border-box;
   margin: 1px;
   background-color: rgba(255, 255, 255, 0.2);
@@ -58,10 +61,67 @@ body {
   border-radius: 8px;
 }
 
-.cyan { background-color: #2D3092 }
-.blue { background-color: #5FB6EA }
-.orange { background-color: orange }
-.yellow { background-color: #8AC53E }
-.green { background-color: #F5BC5B }
-.purple { background-color: #EC6C6C }
-.red { background-color: red }
+.preview {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  align-items: center;
+}
+
+.score { color: #EC6C6C }
+.level { color: #5FB6EA }
+.next-level { color: orange }
+.next-up { color: #8AC53E }
+
+.tetrominoe-I { background-color: #2D3092 }
+.tetrominoe-J { background-color: #5FB6EA }
+.tetrominoe-L { background-color: orange }
+.tetrominoe-O { background-color: #8AC53E }
+.tetrominoe-S { background-color: #F5BC5B }
+.tetrominoe-T { background-color: #EC6C6C }
+.tetrominoe-Z { background-color: red }
+.no-background {
+  background-color: transparent;
+  /* display: none; */
+}
+.no-display {
+  /* background-color: transparent; */
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .App {
+    flex-direction: column;
+    touch-action: 'pan-y';
+  }
+
+  .col {
+    width: 30px;
+    height: 30px;
+  }
+
+  .board {
+    margin: 0;
+  }
+
+  .info {
+    width: 300px;
+    display: flex;
+    justify-content: space-between;
+    margin: 10px auto;
+  }
+
+  .info p {
+    margin: 10px;
+  }
+
+  .info .label {
+    margin-right: 10px;
+  }
+
+  .preview {
+    margin-top: 0;
+  }
+}
+
+
